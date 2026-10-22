@@ -3,7 +3,9 @@ const welcome=document.getElementById('welcome');const main=document.getElementB
 /* User-supplied audio: this file is already cut to begin at 0:21. */
 const weddingAudio=document.getElementById('weddingAudio');
 const audioToggle=document.getElementById('musicToggle');
-async function playWeddingAudio(){if(!weddingAudio)return;try{weddingAudio.volume=.6;await weddingAudio.play();audioToggle.textContent='♫ Pause Names of Allah';audioToggle.setAttribute('aria-pressed','true')}catch(err){audioToggle.textContent='♫ Tap to Play Audio';audioToggle.setAttribute('aria-pressed','false')}}
+async function playWeddingAudio(){if(!weddingAudio)return;try{weddingAudio.volume=.6;if(weddingAudio.readyState>=1&&weddingAudio.currentTime<21)weddingAudio.currentTime=21;await weddingAudio.play();audioToggle.textContent='♫ Pause Names of Allah';audioToggle.setAttribute('aria-pressed','true')}catch(err){audioToggle.textContent='♫ Tap to Play Audio';audioToggle.setAttribute('aria-pressed','false')}}
 document.getElementById('open')?.addEventListener('click',playWeddingAudio);
 audioToggle?.addEventListener('click',()=>{if(!weddingAudio)return;if(weddingAudio.paused)playWeddingAudio();else{weddingAudio.pause();audioToggle.textContent='♫ Play Names of Allah';audioToggle.setAttribute('aria-pressed','false')}});
 weddingAudio?.addEventListener('error',()=>{audioToggle.textContent='♫ Audio file not available yet';audioToggle.setAttribute('aria-pressed','false')});
+
+weddingAudio?.addEventListener('loadedmetadata',()=>{if(weddingAudio.currentTime<21){try{weddingAudio.currentTime=21}catch(e){}}});
